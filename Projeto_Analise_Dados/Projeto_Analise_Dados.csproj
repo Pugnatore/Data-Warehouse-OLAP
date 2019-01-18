@@ -44,6 +44,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Customers.cs" />
+    <Compile Include="Employees.cs" />
+    <Compile Include="employee_privileges.cs" />
+    <Compile Include="Inventory_Transactions.cs" />
+    <Compile Include="Inventory_transaction_types.cs" />
+    <Compile Include="Invoices.cs" />
+    <Compile Include="Orders.cs" />
+    <Compile Include="Orders_tax_status.cs" />
+    <Compile Include="Order_Details.cs" />
+    <Compile Include="Order_Details_Status.cs" />
+    <Compile Include="Order_status.cs" />
+    <Compile Include="Previleges.cs" />
+    <Compile Include="Products.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

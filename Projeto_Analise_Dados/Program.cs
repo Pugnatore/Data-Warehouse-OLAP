@@ -10,8 +10,8 @@ namespace Projeto_Analise_Dados
 
     class Program
     {
-        
 
+        public static string connectionstring = "server =localhost;user id = root; persistsecurityinfo=True;database=northwind";
         void Main(string[] args)
         {
             
