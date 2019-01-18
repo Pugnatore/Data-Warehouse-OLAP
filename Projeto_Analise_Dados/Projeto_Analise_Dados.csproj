@@ -59,6 +59,12 @@
     <Compile Include="Products.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Purchase_Orders.cs" />
+    <Compile Include="Purchase_order_details.cs" />
+    <Compile Include="Purchase_Order_Status.cs" />
+    <Compile Include="Sales_Report.cs" />
+    <Compile Include="Shippers.cs" />
+    <Compile Include="Suppliers.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
