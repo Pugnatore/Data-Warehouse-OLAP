@@ -6,9 +6,12 @@ using System.Threading.Tasks;
 
 namespace Projeto_Analise_Dados
 {
-    class Orders_tax_status
+    class Inventory
     {
         public int Id { get; set; }
-        public string Tax_status_name { get; set; }
+        public int Product_id { get; set; }
+        public decimal Quantity { get; set; }
+        public string Type { get; set; }
+        public DateTime Create_Date { get; set; }
     }
 }

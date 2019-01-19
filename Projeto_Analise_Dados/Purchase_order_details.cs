@@ -10,14 +10,13 @@ namespace Projeto_Analise_Dados
     {
 
         public int Id { get; set; }
-        public int Purchase_order_id { get; set; }
+        public string Purchase_order_id { get; set; }
         public int Product_id { get; set; }
-        public double Quantity { get; set; }
-        public double Unit_cost { get; set; }
-        public DateTime Date_received { get; set; }
-        public int Posted_to_inventory { get; set; }
-        public int Inventory_id { get; set; }
-   
-        
+        public decimal Quantity { get; set; }
+        public decimal Unit_cost { get; set; }
+        public DateTime Create_Time { get; set; }
+        public string Type { get; set; }
+
+
     }
 }
