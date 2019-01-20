@@ -37,10 +37,11 @@ namespace Projeto_Analise_Dados
         static void ChamarMetodos()
         {
             while (true)
-            {   if (DateTime.Now.Hour == 23 && DateTime.Now.Minute < 5)
+            {   
+                if (DateTime.Now.Hour == 23 && DateTime.Now.Minute < 5)
                 {
-                    //codigo para apagar os dados todos
-                    //na esquecer do SET SQL_SAFE_UPDATES = 0;
+                    DeleteAllData();
+                    
                 }
                 else
                 {
@@ -50,11 +51,11 @@ namespace Projeto_Analise_Dados
                     ReadOrderDetails();
                     ReadEmployees();
                     ReadFaturas();
-                    ReadFornecedores();//falta adicionar a city e country nas tabelas e descomentar o codigo daqui
+                    ReadFornecedores();
                     ReadInventory();
                     ReadOrders();
                     ReadProducts();
-                    ReadRemetende();//nao ha job title?
+                    ReadRemetende();
                     WriteCustomers();
                     WritePurchaseOrders();
                     WritePurchaseOrdersDetails();
@@ -313,10 +314,7 @@ namespace Projeto_Analise_Dados
                 while (dr.Read())
                 {
                     Suppliers s = new Suppliers();
-
-                   
-
-                    s.Id = (int)dr["id_fornecedor"];
+                     s.Id = (int)dr["id_fornecedor"];
                     s.First_name = (string)dr["first_name"];
                     s.Last_name = (string)dr["last_name"];
                     s.Company = (string)dr["company"];
@@ -327,9 +325,7 @@ namespace Projeto_Analise_Dados
                     s.Create_Time = (DateTime)dr["create_time"];
 
                     ListSuppliers.Add(s);
-
-      
-                }
+     }
 
                 Console.WriteLine("fornecedores lidos com sucesso!!\n");
             }
@@ -1121,7 +1117,6 @@ namespace Projeto_Analise_Dados
                                 + "'" + s.First_name + "'" + ","
                                 + "'" + s.Last_name + "'" + ","
                                 + "'" + s.Company + "'" + ","
-                               // + "'" + customers.Job_title + "'" + ","
                                 + "'" + s.City + "'" + ","
                                  + "'" + s.Country + "'" + ","
                                  + "'" + s.Type + "'" + ","
@@ -1142,6 +1137,93 @@ namespace Projeto_Analise_Dados
             }
         }
 
+        public static void DeleteAllData()
+        {
+            string sql1 = " SET SQL_SAFE_UPDATES = 0;" +
+                        "   Delete FROM Cliente  ";
+            string sql2 = " SET SQL_SAFE_UPDATES = 0;" +
+                        "   Delete FROM compra_ordem  ";
+            string sql3 = " SET SQL_SAFE_UPDATES = 0;" +
+                       "   Delete FROM compra_ordem_detalhes  ";
+            string sql4 = " SET SQL_SAFE_UPDATES = 0;" +
+                       "   Delete FROM detalhes_ordem  ";
+            string sql5 = " SET SQL_SAFE_UPDATES = 0;" +
+                       "   Delete FROM empregados  ";
+            string sql6 = " SET SQL_SAFE_UPDATES = 0;" +
+                      "   Delete FROM faturas  ";
+            string sql7 = " SET SQL_SAFE_UPDATES = 0;" +
+                      "   Delete FROM fornecedores  ";
+            string sql8 = " SET SQL_SAFE_UPDATES = 0;" +
+                      "   Delete FROM inventorios  ";
+            string sql9 = " SET SQL_SAFE_UPDATES = 0;" +
+                      "   Delete FROM ordem  ";
+            string sql10 = " SET SQL_SAFE_UPDATES = 0;" +
+                      "   Delete FROM produtos  ";
+            string sql11 = " SET SQL_SAFE_UPDATES = 0;" +
+                      "   Delete FROM Remetente  ";
+            MySqlConnection con = new MySqlConnection(connectionstring);
+            MySqlConnection con2 = new MySqlConnection(connectionstring2);
+            MySqlCommand cmd1 = new MySqlCommand(sql1, con);
+            MySqlCommand cmd2 = new MySqlCommand(sql2, con);
+            MySqlCommand cmd3 = new MySqlCommand(sql3, con);
+            MySqlCommand cmd4= new MySqlCommand(sql4, con);
+            MySqlCommand cmd5 = new MySqlCommand(sql5, con);
+            MySqlCommand cmd6 = new MySqlCommand(sql6, con);
+            MySqlCommand cmd7 = new MySqlCommand(sql7, con);
+            MySqlCommand cmd8 = new MySqlCommand(sql8, con);
+            MySqlCommand cmd9 = new MySqlCommand(sql9, con);
+            MySqlCommand cmd10 = new MySqlCommand(sql10, con);
+            MySqlCommand cmd11 = new MySqlCommand(sql11, con);
+            MySqlCommand cmd12 = new MySqlCommand(sql1, con2);
+            MySqlCommand cmd13 = new MySqlCommand(sql2, con2);
+            MySqlCommand cmd14 = new MySqlCommand(sql3, con2);
+            MySqlCommand cmd15 = new MySqlCommand(sql4, con2);
+            MySqlCommand cmd16 = new MySqlCommand(sql5, con2);
+            MySqlCommand cmd17 = new MySqlCommand(sql6, con2);
+            MySqlCommand cmd18 = new MySqlCommand(sql7, con2);
+            MySqlCommand cmd19 = new MySqlCommand(sql8, con2);
+            MySqlCommand cmd20 = new MySqlCommand(sql9, con2);
+            MySqlCommand cmd21 = new MySqlCommand(sql10, con2);
+            MySqlCommand cmd22 = new MySqlCommand(sql11, con2);
+            con.Open();
+            try
+            {
+                cmd1.ExecuteNonQuery();
+                cmd2.ExecuteNonQuery();
+                cmd3.ExecuteNonQuery();
+                cmd4.ExecuteNonQuery();
+                cmd5.ExecuteNonQuery();
+                cmd6.ExecuteNonQuery();
+                cmd7.ExecuteNonQuery();
+                cmd8.ExecuteNonQuery();
+                cmd9.ExecuteNonQuery();
+                cmd10.ExecuteNonQuery();
+                cmd11.ExecuteNonQuery();
+                cmd12.ExecuteNonQuery();
+                cmd13.ExecuteNonQuery();
+                cmd14.ExecuteNonQuery();
+                cmd15.ExecuteNonQuery();
+                cmd16.ExecuteNonQuery();
+                cmd17.ExecuteNonQuery();
+                cmd18.ExecuteNonQuery();
+                cmd19.ExecuteNonQuery();
+                cmd20.ExecuteNonQuery();
+                cmd21.ExecuteNonQuery();
+                cmd22.ExecuteNonQuery();
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Erro:" + ex.Message);
+            }
+            finally
+            {
+                con.Close();
+            }
+        }
+
     }
 
 }
+
+
