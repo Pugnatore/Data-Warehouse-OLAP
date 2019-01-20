@@ -12,6 +12,8 @@ namespace Projeto_Analise_Dados
         public int Employee_id { get; set; }
         public int Customer_id { get; set; }
         public int Status_id { get; set; }
+        public int Id_remetente { get; set; }
+        public string Payment_type { get; set; }
         public DateTime Order_date { get; set; }
         public DateTime Paid_date { get; set; }
         public DateTime Shipped_date { get; set; }

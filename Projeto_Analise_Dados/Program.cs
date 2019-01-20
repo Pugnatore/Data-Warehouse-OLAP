@@ -37,31 +37,38 @@ namespace Projeto_Analise_Dados
         static void ChamarMetodos()
         {
             while (true)
-            {
-                ReadCustomers();
-                ReadPurchaseOrders();
-                ReadPurchaseOrdersDetails();
-                ReadOrderDetails();
-                ReadEmployees();//falta adicionar o first_name e last_name nas tabelas e descomentar o codigo daqui
-                ReadFaturas();
-                ReadFornecedores();//falta adicionar a city e country nas tabelas e descomentar o codigo daqui
-                ReadInventory();
-                ReadOrders();
-                ReadProducts();
-                ReadRemetende();//nao ha job title?
-                WriteCustomers();
-                WritePurchaseOrders();
-                WritePurchaseOrdersDetails();
-                WriteOrdersDetails();
-                WriteEmployees();
-                WriteFaturas();
-                WriteFornecedores();
-                WriteInventory();
-                WriteOrders();
-                WriteProducts();
-                WriteRemetente();
-                Thread.Sleep(1000 * 60* 5); //executa o codigo de 5 em 5 minutos
-
+            {   if (DateTime.Now.Hour == 23 && DateTime.Now.Minute < 5)
+                {
+                    //codigo para apagar os dados todos
+                    //na esquecer do SET SQL_SAFE_UPDATES = 0;
+                }
+                else
+                {
+                    ReadCustomers();
+                    ReadPurchaseOrders();
+                    ReadPurchaseOrdersDetails();
+                    ReadOrderDetails();
+                    ReadEmployees();
+                    ReadFaturas();
+                    ReadFornecedores();//falta adicionar a city e country nas tabelas e descomentar o codigo daqui
+                    ReadInventory();
+                    ReadOrders();
+                    ReadProducts();
+                    ReadRemetende();//nao ha job title?
+                    WriteCustomers();
+                    WritePurchaseOrders();
+                    WritePurchaseOrdersDetails();
+                    WriteOrdersDetails();
+                    WriteEmployees();
+                    WriteFaturas();
+                    WriteFornecedores();
+                    WriteInventory();
+                    WriteOrders();
+                    WriteProducts();
+                    WriteRemetente();
+                   
+                }
+                Thread.Sleep(1000 * 60 * 5); //executa o codigo de 5 em 5 minutos
             }
             
         }
@@ -203,6 +210,7 @@ namespace Projeto_Analise_Dados
                     od.Unit_price = (decimal)dr["unit_price"];
                     od.Type = (string)dr["type"];
                     od.Create_Date = (DateTime)dr["create_time"];
+                    od.Id_Factos = (int)dr["id_factos"];
 
                     ListOrderDetails.Add(od);
                 }
@@ -234,8 +242,8 @@ namespace Projeto_Analise_Dados
                     Employees e = new Employees();
 
                     e.Id = (int)dr["idempregados"];
-                   /* e.First_name = (string)dr["first_name"];
-                    e.Last_name = (string)dr["last_name"];*/
+                    e.First_name = (string)dr["first_name"];
+                    e.Last_name = (string)dr["last_name"];
                     e.Company = (string)dr["company"];
                     e.Job_title = (string)dr["jobtitle"];
                     e.City = (string)dr["city"];
@@ -398,6 +406,8 @@ namespace Projeto_Analise_Dados
                     o.Order_date = (DateTime)dr["data_ordem"];
                     o.Paid_date= (DateTime)dr["data_paid"];
                     o.Shipped_date = (DateTime)dr["data_shipped"];
+                    o.Payment_type = (string)dr["payment_type"];
+                    o.Id_remetente = (int)dr["id_remetente"];
 
                     ListOrders.Add(o);
                 }
@@ -684,6 +694,7 @@ namespace Projeto_Analise_Dados
                         cmd.CommandText = "UPDATE detalhes_ordem "
                                     + "SET "
                                     + " idprodutos = '" + od.Product_id + "' ,"
+                                     + " id_factos = '" + od.Id_Factos + "' ,"
                                     + " quantidade= " + od.Quantity.ToString().Replace(",", ".") + " ,"
                                      + " unit_price = " + od.Unit_price.ToString().Replace(",", ".") + " ,"
                                      + " type = '" + od.Type + "' ,"
@@ -694,9 +705,10 @@ namespace Projeto_Analise_Dados
 
                         if (rowsUpdated == 0)
                         {
-                            cmd.CommandText = "INSERT INTO detalhes_ordem (id_ordem_detalhes,idprodutos,quantidade,unit_price,type,create_time)" +
+                            cmd.CommandText = "INSERT INTO detalhes_ordem (id_ordem_detalhes,id_factos,idprodutos,quantidade,unit_price,type,create_time)" +
                                 " VALUES("
                                 + od.Id + ","
+                                 + od.Id_Factos + ","
                                 + od.Product_id + ","
                                 + od.Quantity.ToString().Replace(",", ".") + ","
                                 + od.Unit_price.ToString().Replace(",", ".") + ","
@@ -735,8 +747,8 @@ namespace Projeto_Analise_Dados
 
                         cmd.CommandText = "UPDATE empregados "
                                     + "SET "
-                                   /* + " first_name = '" + e.First_name + "' ,"
-                                    + " last_name = '" + e.Last_name + "' ,"*/
+                                    + " first_name = '" + e.First_name + "' ,"
+                                    + " last_name = '" + e.Last_name + "' ,"
                                     + " company = '" + e.Company + "' ,"
                                     + " jobtitle = '" + e.Job_title + "' ,"
                                      + " city = '" + e.City + "' ,"
@@ -752,12 +764,12 @@ namespace Projeto_Analise_Dados
 
 
 
-                                                                        //first_name,last_name
-                            cmd.CommandText = "INSERT INTO empregados (idempregados,company,jobtitle,city,country,type,create_time)" +
+                                                                        
+                            cmd.CommandText = "INSERT INTO empregados (idempregados,first_name,last_name,company,jobtitle,city,country,type,create_time)" +
                                 " VALUES("
                                 + e.Id + ","
-                               /* + "'" + e.First_name + "'" + ","
-                                + "'" + e.Last_name + "'" + ","*/
+                                + "'" + e.First_name + "'" + ","
+                                + "'" + e.Last_name + "'" + ","
                                 + "'" + e.Company + "'" + ","
                                 + "'" + e.Job_title + "'" + ","
                                 + "'" + e.City + "'" + ","
@@ -968,8 +980,10 @@ namespace Projeto_Analise_Dados
                                     + " id_empregado ="+ o.Employee_id + ","
                                     + " id_cliente =" + o.Customer_id + ","
                                     + " status_id = " + o.Status_id + ","
+                                     + " id_remetente = " + o.Id_remetente + ","
                                      + " type = '" + o.Type + "' ,"
                                      + " create_time = '" + created_time + "' ,"
+                                     + " payment_type = '" + o.Payment_type + "' ,"
                                      + " data_ordem = '" + order_date + "' ,"
                                       + " data_paid = '" + paid_date + "' ,"
                                        + " data_shipped = '" + shipped_date + "'"
@@ -981,7 +995,7 @@ namespace Projeto_Analise_Dados
                         {
 
 
-                            cmd.CommandText = "INSERT INTO ordem (id_ordem,id_empregado,id_cliente,status_id,type,create_time,data_ordem,data_paid,data_shipped)" +
+                            cmd.CommandText = "INSERT INTO ordem (id_ordem,id_empregado,id_cliente,status_id,type,create_time,data_ordem,data_paid,data_shipped,id_remetente,payment_type)" +
                                 " VALUES("
                                 + o.Id + ","
                                 + o.Employee_id + ","
@@ -991,7 +1005,9 @@ namespace Projeto_Analise_Dados
                                  + "'" + created_time + "',"
                                  + "'" + order_date + "',"
                                  + "'" + paid_date + "',"
-                                 + "'" + shipped_date + "'"
+                                 + "'" + shipped_date + "' ,"
+                                  + o.Id_remetente + ","
+                                  + "'" + o.Payment_type + "'"
                                 + ");";
 
                             cmd.ExecuteNonQuery();
