@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
 
@@ -29,28 +30,40 @@ namespace Projeto_Analise_Dados
         public static string connectionstring2 = "server =localhost;user id = root; Password=1234; persistsecurityinfo=True;database=dw_northwind";
         public static void Main(string[] args)
         {
-            ReadCustomers();
-            ReadPurchaseOrders();
-            ReadPurchaseOrdersDetails();
-            ReadOrderDetails();
-            ReadEmployees();//falta adicionar o first_name e last_name nas tabelas e descomentar o codigo daqui
-            ReadFaturas();
-            ReadFornecedores();//falta adicionar a city e country nas tabelas e descomentar o codigo daqui
-            ReadInventory();
-            ReadOrders();
-            ReadProducts();
-            ReadRemetende();//nao ha job title?
-            WriteCustomers();
-            WritePurchaseOrders();
-            WritePurchaseOrdersDetails();
-            WriteOrdersDetails();
-            WriteEmployees();
-            WriteFaturas();
-            WriteFornecedores();
-            WriteInventory();
-            WriteOrders();
-            WriteProducts();
-            WriteRemetente();
+            Thread printer = new Thread(new ThreadStart(ChamarMetodos));
+            printer.Start();
+
+        }
+        static void ChamarMetodos()
+        {
+            while (true)
+            {
+                ReadCustomers();
+                ReadPurchaseOrders();
+                ReadPurchaseOrdersDetails();
+                ReadOrderDetails();
+                ReadEmployees();//falta adicionar o first_name e last_name nas tabelas e descomentar o codigo daqui
+                ReadFaturas();
+                ReadFornecedores();//falta adicionar a city e country nas tabelas e descomentar o codigo daqui
+                ReadInventory();
+                ReadOrders();
+                ReadProducts();
+                ReadRemetende();//nao ha job title?
+                WriteCustomers();
+                WritePurchaseOrders();
+                WritePurchaseOrdersDetails();
+                WriteOrdersDetails();
+                WriteEmployees();
+                WriteFaturas();
+                WriteFornecedores();
+                WriteInventory();
+                WriteOrders();
+                WriteProducts();
+                WriteRemetente();
+                Thread.Sleep(1000 * 60* 5); //executa o codigo de 5 em 5 minutos
+
+            }
+            
         }
 
         public static void ReadCustomers()
