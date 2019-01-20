@@ -15,6 +15,7 @@ namespace Projeto_Analise_Dados
         public decimal List_price { get; set; }
         public string Category { get; set; }
         public string Type { get; set; }
+        public decimal Quantity { get; set; }
         public DateTime Create_Date { get; set; }
 
 

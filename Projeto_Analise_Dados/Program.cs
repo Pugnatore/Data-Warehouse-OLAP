@@ -52,7 +52,6 @@ namespace Projeto_Analise_Dados
                     ReadEmployees();
                     ReadFaturas();
                     ReadFornecedores();
-                    ReadInventory();
                     ReadOrders();
                     ReadProducts();
                     ReadRemetende();
@@ -63,7 +62,6 @@ namespace Projeto_Analise_Dados
                     WriteEmployees();
                     WriteFaturas();
                     WriteFornecedores();
-                    WriteInventory();
                     WriteOrders();
                     WriteProducts();
                     WriteRemetente();
@@ -338,46 +336,6 @@ namespace Projeto_Analise_Dados
                 con.Close();
             }
         }
-        public static void ReadInventory()
-        {
-            string sql = " SELECT * FROM inventorio  ";
-            MySqlConnection con = new MySqlConnection(connectionstring);
-            MySqlCommand cmd = new MySqlCommand(sql, con);
-            Console.WriteLine("-----Leitura dos inventorios---------\n");
-            con.Open();
-            try
-            {
-                MySqlDataReader dr = cmd.ExecuteReader();
-
-                while (dr.Read())
-                {
-                    Inventory i = new Inventory();
-
-
-
-                    i.Id = (int)dr["id_inventorio"];
-                    i.Product_id = (int)dr["id_produto"];
-                    i.Quantity = (int)dr["quantidade"];
-                    
-                    i.Type = (string)dr["type"];
-                    i.Create_Date = (DateTime)dr["create_time"];
-
-                    ListInventory.Add(i);
-
-
-                }
-
-                Console.WriteLine("inventorios lidos com sucesso!!\n");
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Erro:" + ex.Message);
-            }
-            finally
-            {
-                con.Close();
-            }
-        }
         public static void ReadOrders()
         {
             string sql = " SELECT * FROM ordem  ";
@@ -438,6 +396,7 @@ namespace Projeto_Analise_Dados
                     p.Category = (string)dr["category"];
                     p.Product_name= (string)dr["nome"];
                     p.Type = (string)dr["type"];
+                    p.Quantity = (decimal)dr["quantidade"];
                     p.Standard_cost = (decimal)dr["standard_cost"];
                     p.List_price = (decimal)dr["list_price"];
                     p.Create_Date = (DateTime)dr["create_time"];
@@ -514,26 +473,6 @@ namespace Projeto_Analise_Dados
                        
                             string date = customers.Create_Time.ToString("yyyy-MM-dd HH:mm:ss");
                         
-                        cmd.CommandText = "UPDATE cliente "
-                                    + "SET "
-                                    + " first_name = '" + customers.First_name + "' ,"
-                                    + " last_name = '" + customers.Last_name + "' ,"
-                                    + " company = '" + customers.Company + "' ,"
-                                    + " jobtitle = '" + customers.Job_title + "' ,"
-                                     + " city = '" + customers.City + "' ,"
-                                     + " country = '" + customers.Country + "' ,"
-                                     + " type = '" + customers.Type + "' ,"
-                                     + " create_time = '" + date +"'"
-                                    + " WHERE idcliente = " + customers.Id_Cliente;
-
-                        int rowsUpdated = cmd.ExecuteNonQuery();
-
-                        if (rowsUpdated == 0)
-                        {
-                           
-                            
-
-
                             cmd.CommandText = "INSERT INTO cliente (idcliente,first_name,last_name,company,jobtitle,city,country,type,create_time)" +
                                 " VALUES("
                                 + customers.Id_Cliente + ","
@@ -548,7 +487,7 @@ namespace Projeto_Analise_Dados
                                 + ");";
 
                             cmd.ExecuteNonQuery();
-                        }
+                        
 
                     }
                     connection.Close();
@@ -573,25 +512,7 @@ namespace Projeto_Analise_Dados
                     foreach (Purchase_Orders po in ListPurchaseOrders)
                     {
                         string date = po.Create_Date.ToString("yyyy-MM-dd HH:mm:ss");
-
-
-                        cmd.CommandText = "UPDATE compra_ordem "
-                                    + "SET "
-                                    + " id_empregado = '" + po.Id_Empregado + "' ,"
-                                    + " status = '" + po.Status + "' ,"
-                                    + " id_fornecedor= '" + po.Id_Fornecedor + "' ,"   
-                                     + " type = '" + po.Type + "' ,"
-                                     + " create_time = '" + date + "'"
-                                    + " WHERE id_compra_ordem = " + po.Id;
-
-                        int rowsUpdated = cmd.ExecuteNonQuery();
-
-                        if (rowsUpdated == 0)
-                        {
-
-
-
-
+                        
                             cmd.CommandText = "INSERT INTO compra_ordem (id_compra_ordem,id_empregado,status,id_fornecedor,type,create_time)" +
                                 " VALUES("
                                 + po.Id + ","
@@ -603,7 +524,7 @@ namespace Projeto_Analise_Dados
                                 + ");";
 
                             cmd.ExecuteNonQuery();
-                        }
+                        
 
                     }
                     connection.Close();
@@ -628,27 +549,7 @@ namespace Projeto_Analise_Dados
                     foreach (Purchase_order_details po in ListPurchaseOrderDetails)
                     {
                         string date = po.Create_Time.ToString("yyyy-MM-dd HH:mm:ss");
-
-                      
-
-                        cmd.CommandText = "UPDATE compra_ordem_detalhes "
-                                    + "SET "
-                                    + " product_id = '" + po.Product_id + "' ,"
-                                    + " quantidade= " + po.Quantity.ToString().Replace(",", ".") + " ,"
-                                     + " unit_cost = " + po.Unit_cost.ToString().Replace(",", ".") + " ,"
-                                     + " compra_id = '" + po.Purchase_order_id + "' ,"
-                                     + " type = '" + po.Type + "' ,"
-                                     + " create_time = '" + date + "'"
-                                    + " WHERE id_compra_details = " + po.Id;
-
-                        int rowsUpdated = cmd.ExecuteNonQuery();
-
-                        if (rowsUpdated == 0)
-                        {
-
-
-
-
+                        
                             cmd.CommandText = "INSERT INTO compra_ordem_detalhes (id_compra_details,product_id,quantidade,unit_cost,compra_id,type,create_time)" +
                                 " VALUES("
                                 + po.Id + ","
@@ -661,7 +562,7 @@ namespace Projeto_Analise_Dados
                                 + ");";
 
                             cmd.ExecuteNonQuery();
-                        }
+                        
 
                     }
                     connection.Close();
@@ -686,21 +587,7 @@ namespace Projeto_Analise_Dados
                     foreach (Order_Details od in ListOrderDetails)
                     {
                         string date = od.Create_Date.ToString("yyyy-MM-dd HH:mm:ss");
-
-                        cmd.CommandText = "UPDATE detalhes_ordem "
-                                    + "SET "
-                                    + " idprodutos = '" + od.Product_id + "' ,"
-                                     + " id_factos = '" + od.Id_Factos + "' ,"
-                                    + " quantidade= " + od.Quantity.ToString().Replace(",", ".") + " ,"
-                                     + " unit_price = " + od.Unit_price.ToString().Replace(",", ".") + " ,"
-                                     + " type = '" + od.Type + "' ,"
-                                     + " create_time = '" + date + "'"
-                                    + " WHERE id_ordem_detalhes = " + od.Id;
-
-                        int rowsUpdated = cmd.ExecuteNonQuery();
-
-                        if (rowsUpdated == 0)
-                        {
+                        
                             cmd.CommandText = "INSERT INTO detalhes_ordem (id_ordem_detalhes,id_factos,idprodutos,quantidade,unit_price,type,create_time)" +
                                 " VALUES("
                                 + od.Id + ","
@@ -713,7 +600,7 @@ namespace Projeto_Analise_Dados
                                 + ");";
 
                             cmd.ExecuteNonQuery();
-                        }
+                        
 
                     }
                     connection.Close();
@@ -740,26 +627,7 @@ namespace Projeto_Analise_Dados
                         
 
                         string date = e.Create_Time.ToString("yyyy-MM-dd HH:mm:ss");
-
-                        cmd.CommandText = "UPDATE empregados "
-                                    + "SET "
-                                    + " first_name = '" + e.First_name + "' ,"
-                                    + " last_name = '" + e.Last_name + "' ,"
-                                    + " company = '" + e.Company + "' ,"
-                                    + " jobtitle = '" + e.Job_title + "' ,"
-                                     + " city = '" + e.City + "' ,"
-                                     + " country = '" + e.Country + "' ,"
-                                     + " type = '" + e.Type + "' ,"
-                                     + " create_time = '" + date + "'"
-                                    + " WHERE idempregados = " + e.Id;
-
-                        int rowsUpdated = cmd.ExecuteNonQuery();
-
-                        if (rowsUpdated == 0)
-                        {
-
-
-
+                        
                                                                         
                             cmd.CommandText = "INSERT INTO empregados (idempregados,first_name,last_name,company,jobtitle,city,country,type,create_time)" +
                                 " VALUES("
@@ -775,7 +643,7 @@ namespace Projeto_Analise_Dados
                                 + ");";
 
                             cmd.ExecuteNonQuery();
-                        }
+                        
 
                     }
                     connection.Close();
@@ -802,21 +670,7 @@ namespace Projeto_Analise_Dados
 
 
                         string date = f.Created_Time.ToString("yyyy-MM-dd HH:mm:ss");
-                         
-
-                      
-                        cmd.CommandText = "UPDATE faturas "
-                                    + "SET "
-                                    + " id_order = '" + f.Id_Order + "' ,"
-                                     + " type = '" + f.Type + "' ,"
-                                     + " create_time = '" + date + "'"
-                                    + " WHERE id_fatura = " + f.Id_Fatura;
-
-                        int rowsUpdated = cmd.ExecuteNonQuery();
-
-                        if (rowsUpdated == 0)
-                        {
-
+                        
                             cmd.CommandText = "INSERT INTO faturas (id_fatura,id_order,type,create_time)" +
                                 " VALUES("
                                 + f.Id_Fatura + ","
@@ -826,7 +680,7 @@ namespace Projeto_Analise_Dados
                                 + ");";
 
                             cmd.ExecuteNonQuery();
-                        }
+                        
 
                     }
                     connection.Close();
@@ -853,25 +707,6 @@ namespace Projeto_Analise_Dados
 
                         string date = s.Create_Time.ToString("yyyy-MM-dd HH:mm:ss");
 
-                        cmd.CommandText = "UPDATE fornecedores "
-                                    + "SET "
-                                    + " first_name = '" + s.First_name + "' ,"
-                                    + " last_name = '" + s.Last_name + "' ,"
-                                    + " company = '" + s.Company + "' ,"
-                                    + " jobtitle = '" + s.Job_title + "' ,"
-                                    /* + " city = '" + s.City + "' ,"
-                                     + " country = '" + s.Country + "' ,"*/
-                                     + " type = '" + s.Type + "' ,"
-                                     + " create_time = '" + date + "'"
-                                    + " WHERE id_fornecedor = " + s.Id;
-
-                        int rowsUpdated = cmd.ExecuteNonQuery();
-
-                        if (rowsUpdated == 0)
-                        {
-
-
-                            //city,country
 
                             cmd.CommandText = "INSERT INTO fornecedores (id_fornecedor,first_name,last_name,company,jobtitle,type,create_time)" +
                                 " VALUES("
@@ -887,60 +722,7 @@ namespace Projeto_Analise_Dados
                                 + ");";
 
                             cmd.ExecuteNonQuery();
-                        }
-
-                    }
-                    connection.Close();
-
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                }
-            }
-        }
-        public static void WriteInventory()
-        {
-            using (MySqlConnection connection = new MySqlConnection(connectionstring2))
-            {
-                MySqlCommand cmd = new MySqlCommand();
-                cmd.Connection = connection;
-                try
-                {
-                    connection.Open();
-
-                    foreach (Inventory i in ListInventory)
-                    {
                         
-
-                        string date = i.Create_Date.ToString("yyyy-MM-dd HH:mm:ss");
-
-                     
-
-                        cmd.CommandText = "UPDATE inventorio "
-                                    + "SET "
-                                    + " id_produto = '" + i.Product_id + "' ,"
-                                     + " quantidade= " + i.Quantity.ToString().Replace(",", ".") + " ,"
-                                     + " type = '" + i.Type + "' ,"
-                                     + " create_time = '" + date + "'"
-                                    + " WHERE id_inventorio = " + i.Id;
-
-                        int rowsUpdated = cmd.ExecuteNonQuery();
-
-                        if (rowsUpdated == 0)
-                        {
-
-                            cmd.CommandText = "INSERT INTO inventorio (id_inventorio,id_produto,quantidade,type,create_time)" +
-                                " VALUES("
-                                + i.Id + ","
-                                + i.Product_id + ","
-                                 + i.Quantity.ToString().Replace(",", ".") + ","
-                                  + "'" + i.Type + "'" + ","
-                                 + "'" + date + "'"
-                                + ");";
-
-                            cmd.ExecuteNonQuery();
-                        }
 
                     }
                     connection.Close();
@@ -970,28 +752,11 @@ namespace Projeto_Analise_Dados
                         string paid_date = o.Paid_date.ToString("yyyy-MM-dd HH:mm:ss");
                         string shipped_date = o.Shipped_date.ToString("yyyy-MM-dd HH:mm:ss");
 
-
-                        cmd.CommandText = "UPDATE ordem "
-                                    + "SET "
-                                    + " id_empregado ="+ o.Employee_id + ","
-                                    + " id_cliente =" + o.Customer_id + ","
-                                    + " status_id = " + o.Status_id + ","
-                                     + " id_remetente = " + o.Id_remetente + ","
-                                     + " type = '" + o.Type + "' ,"
-                                     + " create_time = '" + created_time + "' ,"
-                                     + " payment_type = '" + o.Payment_type + "' ,"
-                                     + " data_ordem = '" + order_date + "' ,"
-                                      + " data_paid = '" + paid_date + "' ,"
-                                       + " data_shipped = '" + shipped_date + "'"
-                                    + " WHERE id_ordem = " + o.Id;
-
-                        int rowsUpdated = cmd.ExecuteNonQuery();
-
-                        if (rowsUpdated == 0)
-                        {
+                        
 
 
-                            cmd.CommandText = "INSERT INTO ordem (id_ordem,id_empregado,id_cliente,status_id,type,create_time,data_ordem,data_paid,data_shipped,id_remetente,payment_type)" +
+                            cmd.CommandText = "INSERT INTO ordem (id_ordem,id_empregado,id_cliente,status_id,type," +
+                            "create_time,data_ordem,data_paid,data_shipped,id_remetente,payment_type)" +
                                 " VALUES("
                                 + o.Id + ","
                                 + o.Employee_id + ","
@@ -1007,7 +772,7 @@ namespace Projeto_Analise_Dados
                                 + ");";
 
                             cmd.ExecuteNonQuery();
-                        }
+                        
 
                     }
                     connection.Close();
@@ -1035,28 +800,14 @@ namespace Projeto_Analise_Dados
                         string created_time = p.Create_Date.ToString("yyyy-MM-dd HH:mm:ss");
                         
 
-                        cmd.CommandText = "UPDATE produtos "
-                                    + "SET "
-                                     + " category = '" + p.Category + "' ,"
-                                     + " nome = '" + p.Product_name + "' ,"
-                                      + "standard_cost= " + p.Standard_cost.ToString().Replace(",", ".") + " ,"
-                                       + "list_price= " + p.List_price.ToString().Replace(",", ".") + " ,"
-                                     + " type = '" + p.Type + "' ,"
-                                     + " create_time = '" + created_time + "'"
-                                    + " WHERE id_produto = " + p.Id;
 
-                        int rowsUpdated = cmd.ExecuteNonQuery();
-
-                        if (rowsUpdated == 0)
-                        {
-
-
-                            cmd.CommandText = "INSERT INTO produtos (id_produto,category,nome,standard_cost,list_price,type,create_time)" +
+                            cmd.CommandText = "INSERT INTO produtos (id_produto,category,nome,standard_cost,quantidade,list_price,type,create_time)" +
                                 " VALUES("
                                 + p.Id + ","
                                 + "'" + p.Category + "',"
                                  + "'" + p.Product_name + "',"
                                  + p.Standard_cost.ToString().Replace(",", ".") + ","
+                                 + p.Quantity.ToString().Replace(",", ".") + ","
                                  + p.List_price.ToString().Replace(",", ".") + ","
                                  + "'" + p.Type + "'" + ","
                                  + "'" + created_time + "'"
@@ -1064,7 +815,7 @@ namespace Projeto_Analise_Dados
                                 + ");";
 
                             cmd.ExecuteNonQuery();
-                        }
+                        
 
                     }
                     connection.Close();
@@ -1091,25 +842,6 @@ namespace Projeto_Analise_Dados
 
                         string date = s.Create_Time.ToString("yyyy-MM-dd HH:mm:ss");
 
-                        cmd.CommandText = "UPDATE remetente "
-                                    + "SET "
-                                    + " first_name = '" + s.First_name + "' ,"
-                                    + " last_name = '" + s.Last_name + "' ,"
-                                    + " company = '" + s.Company + "' ,"
-                                   // + " jobtitle = '" + s.Job_title + "' ,"
-                                     + " city = '" + s.City + "' ,"
-                                     + " country = '" + s.Country + "' ,"
-                                     + " type = '" + s.Type + "' ,"
-                                     + " create_time = '" + date + "'"
-                                    + " WHERE id_remetente = " + s.Id;
-
-                        int rowsUpdated = cmd.ExecuteNonQuery();
-
-                        if (rowsUpdated == 0)
-                        {
-
-
-
                             //jobtitle
                             cmd.CommandText = "INSERT INTO remetente (id_remetente,first_name,last_name,company,city,country,type,create_time)" +
                                 " VALUES("
@@ -1124,7 +856,7 @@ namespace Projeto_Analise_Dados
                                 + ");";
 
                             cmd.ExecuteNonQuery();
-                        }
+                        
 
                     }
                     connection.Close();
@@ -1153,8 +885,6 @@ namespace Projeto_Analise_Dados
                       "   Delete FROM faturas  ";
             string sql7 = " SET SQL_SAFE_UPDATES = 0;" +
                       "   Delete FROM fornecedores  ";
-            string sql8 = " SET SQL_SAFE_UPDATES = 0;" +
-                      "   Delete FROM inventorios  ";
             string sql9 = " SET SQL_SAFE_UPDATES = 0;" +
                       "   Delete FROM ordem  ";
             string sql10 = " SET SQL_SAFE_UPDATES = 0;" +
@@ -1170,7 +900,6 @@ namespace Projeto_Analise_Dados
             MySqlCommand cmd5 = new MySqlCommand(sql5, con);
             MySqlCommand cmd6 = new MySqlCommand(sql6, con);
             MySqlCommand cmd7 = new MySqlCommand(sql7, con);
-            MySqlCommand cmd8 = new MySqlCommand(sql8, con);
             MySqlCommand cmd9 = new MySqlCommand(sql9, con);
             MySqlCommand cmd10 = new MySqlCommand(sql10, con);
             MySqlCommand cmd11 = new MySqlCommand(sql11, con);
@@ -1181,7 +910,6 @@ namespace Projeto_Analise_Dados
             MySqlCommand cmd16 = new MySqlCommand(sql5, con2);
             MySqlCommand cmd17 = new MySqlCommand(sql6, con2);
             MySqlCommand cmd18 = new MySqlCommand(sql7, con2);
-            MySqlCommand cmd19 = new MySqlCommand(sql8, con2);
             MySqlCommand cmd20 = new MySqlCommand(sql9, con2);
             MySqlCommand cmd21 = new MySqlCommand(sql10, con2);
             MySqlCommand cmd22 = new MySqlCommand(sql11, con2);
@@ -1195,7 +923,6 @@ namespace Projeto_Analise_Dados
                 cmd5.ExecuteNonQuery();
                 cmd6.ExecuteNonQuery();
                 cmd7.ExecuteNonQuery();
-                cmd8.ExecuteNonQuery();
                 cmd9.ExecuteNonQuery();
                 cmd10.ExecuteNonQuery();
                 cmd11.ExecuteNonQuery();
@@ -1206,7 +933,6 @@ namespace Projeto_Analise_Dados
                 cmd16.ExecuteNonQuery();
                 cmd17.ExecuteNonQuery();
                 cmd18.ExecuteNonQuery();
-                cmd19.ExecuteNonQuery();
                 cmd20.ExecuteNonQuery();
                 cmd21.ExecuteNonQuery();
                 cmd22.ExecuteNonQuery();
