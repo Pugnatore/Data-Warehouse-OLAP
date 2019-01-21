@@ -396,7 +396,7 @@ namespace Projeto_Analise_Dados
                     p.Category = (string)dr["category"];
                     p.Product_name= (string)dr["nome"];
                     p.Type = (string)dr["type"];
-                    p.Quantity = (decimal)dr["quantidade"];
+                    p.Quantity = (int)dr["quantidade"];
                     p.Standard_cost = (decimal)dr["standard_cost"];
                     p.List_price = (decimal)dr["list_price"];
                     p.Create_Date = (DateTime)dr["create_time"];
@@ -432,8 +432,8 @@ namespace Projeto_Analise_Dados
                     Shippers s = new Shippers();
 
                     s.Id = (int)dr["id_remetente"];
-                    s.First_name = (string)dr["first_name"];
-                    s.Last_name = (string)dr["last_name"];
+                    s.First_name = (string)dr["first_name"].ToString();
+                    s.Last_name = dr["last_name"].ToString();                
                     s.Company = (string)dr["company"];
                    // s.Job_title = (string)dr["jobtitle"];
                     s.City = (string)dr["city"];
