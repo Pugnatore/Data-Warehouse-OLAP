@@ -12,20 +12,26 @@ namespace Projeto_Analise_Dados
     class Program
     {
            static List<Customers> Listcustomers = new List<Customers>();
-      
-           static List<Employees> ListEmployees = new List<Employees>();
+        static DateTime dc = DateTime.MinValue;
+        static List<Employees> ListEmployees = new List<Employees>();
+        static DateTime de = DateTime.MinValue;
+        static List<Order_Details> ListOrderDetails = new List<Order_Details>();
+        static DateTime dod = DateTime.MinValue;
+        static List<Orders> ListOrders = new List<Orders>();
+        static DateTime dor = DateTime.MinValue;
 
-          static List<Order_Details> ListOrderDetails = new List<Order_Details>();
-     
-            static List<Orders> ListOrders = new List<Orders>();
-        
-             static List<Inventory> ListInventory = new List<Inventory>();
         static List<Products> ListProducts = new List<Products>();
-            static List<Purchase_order_details> ListPurchaseOrderDetails = new List<Purchase_order_details>();
-            static List<Purchase_Orders> ListPurchaseOrders = new List<Purchase_Orders>();
-            static List<Shippers> ListShippers = new List<Shippers>();
-            static List<Suppliers> ListSuppliers = new List<Suppliers>();
-            static List<Fatura> ListFatura = new List<Fatura>();
+        static DateTime dp = DateTime.MinValue;
+        static List<Purchase_order_details> ListPurchaseOrderDetails = new List<Purchase_order_details>();
+        static DateTime dpod = DateTime.MinValue;
+        static List<Purchase_Orders> ListPurchaseOrders = new List<Purchase_Orders>();
+        static DateTime dpo = DateTime.MinValue;
+        static List<Shippers> ListShippers = new List<Shippers>();
+        static DateTime ds = DateTime.MinValue;
+        static List<Suppliers> ListSuppliers = new List<Suppliers>();
+        static DateTime dsup = DateTime.MinValue;
+        static List<Fatura> ListFatura = new List<Fatura>();
+        static DateTime df = DateTime.MinValue;
         public static string connectionstring = "server =localhost;user id = root; Password=1234; persistsecurityinfo=True;database=northwind";
         public static string connectionstring2 = "server =localhost;user id = root; Password=1234; persistsecurityinfo=True;database=dw_northwind";
         public static void Main(string[] args)
@@ -85,21 +91,24 @@ namespace Projeto_Analise_Dados
 
                 while (dr.Read())
                 {
-                    Customers customers = new Customers();
-                    
-                    customers.Id_Cliente = (int)dr["idcliente"];
-                    customers.First_name = (string)dr["first_name"];
-                    customers.Last_name= (string)dr["last_name"];
-                    customers.Company= (string)dr["company"];
-                    customers.Job_title = (string)dr["jobtitle"];
-                    customers.City = (string)dr["city"];
-                    customers.Country = (string)dr["country"];
-                    customers.Type = (string)dr["type"];
-                    customers.Create_Time = (DateTime)dr["create_time"];
+                    if ((DateTime)dr["create_time"] > dc)
+                    {
+                        Customers customers = new Customers();
 
-                    Listcustomers.Add(customers);
+                        customers.Id_Cliente = (int)dr["idcliente"];
+                        customers.First_name = (string)dr["first_name"];
+                        customers.Last_name = (string)dr["last_name"];
+                        customers.Company = (string)dr["company"];
+                        customers.Job_title = (string)dr["jobtitle"];
+                        customers.City = (string)dr["city"];
+                        customers.Country = (string)dr["country"];
+                        customers.Type = (string)dr["type"];
+                        customers.Create_Time = (DateTime)dr["create_time"];
+
+                        Listcustomers.Add(customers);
+                    }
                 }
-
+                dc = Listcustomers.Last().Create_Time;
                 Console.WriteLine("Clientes lidos com sucesso!!\n");
             }
             catch (Exception ex)
@@ -126,18 +135,21 @@ namespace Projeto_Analise_Dados
 
                 while (dr.Read())
                 {
-                    Purchase_Orders po = new Purchase_Orders();
+                    if ((DateTime)dr["create_time"] > dpo)
+                    {
+                        Purchase_Orders po = new Purchase_Orders();
 
-                    po.Id = (int)dr["id_compra_ordem"];
-                    po.Id_Empregado = (int)dr["id_empregado"];
-                    po.Status = (int)dr["status"];
-                    po.Id_Fornecedor= (int)dr["id_fornecedor"];
-                    po.Type= (string)dr["type"];
-                    po.Create_Date = (DateTime)dr["create_time"];
+                        po.Id = (int)dr["id_compra_ordem"];
+                        po.Id_Empregado = (int)dr["id_empregado"];
+                        po.Status = (int)dr["status"];
+                        po.Id_Fornecedor = (int)dr["id_fornecedor"];
+                        po.Type = (string)dr["type"];
+                        po.Create_Date = (DateTime)dr["create_time"];
 
-                    ListPurchaseOrders.Add(po);
+                        ListPurchaseOrders.Add(po);
+                    }
                 }
-
+                dpo = ListPurchaseOrders.Last().Create_Date;
                 Console.WriteLine("Purchase Orders lidos com sucesso!!\n");
             }
             catch (Exception ex)
@@ -163,19 +175,23 @@ namespace Projeto_Analise_Dados
 
                 while (dr.Read())
                 {
-                    Purchase_order_details po = new Purchase_order_details();
+                    if ((DateTime)dr["create_time"] > dpod)
+                    {
 
-                    po.Id = (int)dr["id_compra_details"];
-                    po.Product_id= (int)dr["product_id"];
-                    po.Quantity = (decimal)dr["quantidade"];
-                    po.Unit_cost = (decimal)dr["unit_cost"];
-                    po.Purchase_order_id = (string)dr["compra_id"];
-                    po.Type = (string)dr["type"];
-                    po.Create_Time= (DateTime)dr["create_time"];
+                        Purchase_order_details po = new Purchase_order_details();
 
-                    ListPurchaseOrderDetails.Add(po);
+                        po.Id = (int)dr["id_compra_details"];
+                        po.Product_id = (int)dr["product_id"];
+                        po.Quantity = (decimal)dr["quantidade"];
+                        po.Unit_cost = (decimal)dr["unit_cost"];
+                        po.Purchase_order_id = (string)dr["compra_id"];
+                        po.Type = (string)dr["type"];
+                        po.Create_Time = (DateTime)dr["create_time"];
+
+                        ListPurchaseOrderDetails.Add(po);
+                    }
                 }
-
+                dpod = ListPurchaseOrderDetails.Last().Create_Time;
                 Console.WriteLine("Purchase Orders Details lidos com sucesso!!\n");
             }
             catch (Exception ex)
@@ -201,19 +217,23 @@ namespace Projeto_Analise_Dados
 
                 while (dr.Read())
                 {
-                    Order_Details od = new Order_Details();
+                    if ((DateTime)dr["create_time"] > dod)
+                    {
 
-                    od.Id = (int)dr["id_ordem_detalhes"];
-                    od.Product_id = (int)dr["idprodutos"];
-                    od.Quantity = (decimal)dr["quantidade"];
-                    od.Unit_price = (decimal)dr["unit_price"];
-                    od.Type = (string)dr["type"];
-                    od.Create_Date = (DateTime)dr["create_time"];
-                    od.Id_Factos = (int)dr["id_factos"];
+                        Order_Details od = new Order_Details();
 
-                    ListOrderDetails.Add(od);
+                        od.Id = (int)dr["id_ordem_detalhes"];
+                        od.Product_id = (int)dr["idprodutos"];
+                        od.Quantity = (decimal)dr["quantidade"];
+                        od.Unit_price = (decimal)dr["unit_price"];
+                        od.Type = (string)dr["type"];
+                        od.Create_Date = (DateTime)dr["create_time"];
+                        od.Id_Factos = (int)dr["id_factos"];
+
+                        ListOrderDetails.Add(od);
+                    }
                 }
-
+                dod = ListOrderDetails.Last().Create_Date;
                 Console.WriteLine("Order details lidos com sucesso!!\n");
             }
             catch (Exception ex)
@@ -238,21 +258,24 @@ namespace Projeto_Analise_Dados
 
                 while (dr.Read())
                 {
-                    Employees e = new Employees();
+                    if ((DateTime)dr["create_time"] > de)
+                    {
+                        Employees e = new Employees();
 
-                    e.Id = (int)dr["idempregados"];
-                    e.First_name = (string)dr["first_name"];
-                    e.Last_name = (string)dr["last_name"];
-                    e.Company = (string)dr["company"];
-                    e.Job_title = (string)dr["jobtitle"];
-                    e.City = (string)dr["city"];
-                    e.Country = (string)dr["country"];
-                    e.Type = (string)dr["type"];
-                    e.Create_Time = (DateTime)dr["create_time"];
+                        e.Id = (int)dr["idempregados"];
+                        e.First_name = (string)dr["first_name"];
+                        e.Last_name = (string)dr["last_name"];
+                        e.Company = (string)dr["company"];
+                        e.Job_title = (string)dr["jobtitle"];
+                        e.City = (string)dr["city"];
+                        e.Country = (string)dr["country"];
+                        e.Type = (string)dr["type"];
+                        e.Create_Time = (DateTime)dr["create_time"];
 
-                    ListEmployees.Add(e);
+                        ListEmployees.Add(e);
+                    }
                 }
-
+                de = ListEmployees.Last().Create_Time;
                 Console.WriteLine("Clientes lidos com sucesso!!\n");
             }
             catch (Exception ex)
@@ -277,16 +300,19 @@ namespace Projeto_Analise_Dados
 
                 while (dr.Read())
                 {
-                    Fatura f = new Fatura();
+                    if ((DateTime)dr["create_time"] > df)
+                    {
+                        Fatura f = new Fatura();
 
-                    f.Id_Fatura = (int)dr["id_fatura"];
-                    f.Id_Order = (int)dr["id_order"];
-                    f.Type = (string)dr["type"];
-                    f.Created_Time = (DateTime)dr["create_time"];
+                        f.Id_Fatura = (int)dr["id_fatura"];
+                        f.Id_Order = (int)dr["id_order"];
+                        f.Type = (string)dr["type"];
+                        f.Created_Time = (DateTime)dr["create_time"];
 
-                    ListFatura.Add(f);
+                        ListFatura.Add(f);
+                    }
                 }
-
+                df = ListFatura.Last().Created_Time;
                 Console.WriteLine("faturas lidas com sucesso!!\n");
             }
             catch (Exception ex)
@@ -311,20 +337,23 @@ namespace Projeto_Analise_Dados
 
                 while (dr.Read())
                 {
-                    Suppliers s = new Suppliers();
-                     s.Id = (int)dr["id_fornecedor"];
-                    s.First_name = (string)dr["first_name"];
-                    s.Last_name = (string)dr["last_name"];
-                    s.Company = (string)dr["company"];
-                    s.Job_title = (string)dr["jobtitle"];
-                    //s.City = (string)dr["city"];
-                    //s.Country = (string)dr["country"];
-                    s.Type = (string)dr["type"];
-                    s.Create_Time = (DateTime)dr["create_time"];
+                    if ((DateTime)dr["create_time"] > dsup)
+                    {
+                        Suppliers s = new Suppliers();
+                        s.Id = (int)dr["id_fornecedor"];
+                        s.First_name = (string)dr["first_name"];
+                        s.Last_name = (string)dr["last_name"];
+                        s.Company = (string)dr["company"];
+                        s.Job_title = (string)dr["jobtitle"];
+                        //s.City = (string)dr["city"];
+                        //s.Country = (string)dr["country"];
+                        s.Type = (string)dr["type"];
+                        s.Create_Time = (DateTime)dr["create_time"];
 
-                    ListSuppliers.Add(s);
-     }
-
+                        ListSuppliers.Add(s);
+                    }
+                 }
+                dsup = ListSuppliers.Last().Create_Time;
                 Console.WriteLine("fornecedores lidos com sucesso!!\n");
             }
             catch (Exception ex)
@@ -349,23 +378,26 @@ namespace Projeto_Analise_Dados
 
                 while (dr.Read())
                 {
-                    Orders o = new Orders();
+                    if ((DateTime)dr["create_time"] > dor)
+                    {
+                        Orders o = new Orders();
 
-                    o.Id = (int)dr["id_ordem"];
-                    o.Employee_id = (int)dr["id_empregado"];
-                    o.Customer_id = (int)dr["id_cliente"];
-                    o.Status_id = (int)dr["status_id"];
-                    o.Type = (string)dr["type"];
-                    o.Created_Time= (DateTime)dr["create_time"];
-                    o.Order_date = (DateTime)dr["data_ordem"];
-                    o.Paid_date= (DateTime)dr["data_paid"];
-                    o.Shipped_date = (DateTime)dr["data_shipped"];
-                    o.Payment_type = (string)dr["payment_type"];
-                    o.Id_remetente = (int)dr["id_remetente"];
+                        o.Id = (int)dr["id_ordem"];
+                        o.Employee_id = (int)dr["id_empregado"];
+                        o.Customer_id = (int)dr["id_cliente"];
+                        o.Status_id = (int)dr["status_id"];
+                        o.Type = (string)dr["type"];
+                        o.Created_Time = (DateTime)dr["create_time"];
+                        o.Order_date = (DateTime)dr["data_ordem"];
+                        o.Paid_date = (DateTime)dr["data_paid"];
+                        o.Shipped_date = (DateTime)dr["data_shipped"];
+                        o.Payment_type = (string)dr["payment_type"];
+                        o.Id_remetente = (int)dr["id_remetente"];
 
-                    ListOrders.Add(o);
+                        ListOrders.Add(o);
+                    }
                 }
-
+                dor = ListOrders.Last().Created_Time;
                 Console.WriteLine("Orders lidos com sucesso!!\n");
             }
             catch (Exception ex)
@@ -390,21 +422,24 @@ namespace Projeto_Analise_Dados
 
                 while (dr.Read())
                 {
-                    Products p = new Products();
+                    if ((DateTime)dr["create_time"] > dp)
+                    {
+                        Products p = new Products();
 
-                    p.Id= (int)dr["id_produto"];
-                    p.Category = (string)dr["category"];
-                    p.Product_name= (string)dr["nome"];
-                    p.Type = (string)dr["type"];
-                    p.Quantity = (int)dr["quantidade"];
-                    p.Standard_cost = (decimal)dr["standard_cost"];
-                    p.List_price = (decimal)dr["list_price"];
-                    p.Create_Date = (DateTime)dr["create_time"];
+                        p.Id = (int)dr["id_produto"];
+                        p.Category = (string)dr["category"];
+                        p.Product_name = (string)dr["nome"];
+                        p.Type = (string)dr["type"];
+                        p.Quantity = (int)dr["quantidade"];
+                        p.Standard_cost = (decimal)dr["standard_cost"];
+                        p.List_price = (decimal)dr["list_price"];
+                        p.Create_Date = (DateTime)dr["create_time"];
 
 
-                    ListProducts.Add(p);
+                        ListProducts.Add(p);
+                    }
                 }
-
+                dp = ListProducts.Last().Create_Date;
                 Console.WriteLine("Produtos lidos com sucesso!!\n");
             }
             catch (Exception ex)
@@ -429,23 +464,26 @@ namespace Projeto_Analise_Dados
 
                 while (dr.Read())
                 {
-                    Shippers s = new Shippers();
+                    if ((DateTime)dr["create_time"] > ds)
+                    {
+                        Shippers s = new Shippers();
 
-                    s.Id = (int)dr["id_remetente"];
-                    s.First_name = (string)dr["first_name"].ToString();
-                    s.Last_name = dr["last_name"].ToString();                
-                    s.Company = (string)dr["company"];
-                   // s.Job_title = (string)dr["jobtitle"];
-                    s.City = (string)dr["city"];
-                    s.Country = (string)dr["country"];
-                    s.Type = (string)dr["type"];
-                    s.Create_Time = (DateTime)dr["create_time"];
+                        s.Id = (int)dr["id_remetente"];
+                        s.First_name = (string)dr["first_name"].ToString();
+                        s.Last_name = dr["last_name"].ToString();
+                        s.Company = (string)dr["company"];
+                        // s.Job_title = (string)dr["jobtitle"];
+                        s.City = (string)dr["city"];
+                        s.Country = (string)dr["country"];
+                        s.Type = (string)dr["type"];
+                        s.Create_Time = (DateTime)dr["create_time"];
 
-                    
 
-                    ListShippers.Add(s);
+
+                        ListShippers.Add(s);
+                    }
                 }
-
+                ds = ListShippers.Last().Create_Time;
                 Console.WriteLine("Remetentes lidos com sucesso!!\n");
             }
             catch (Exception ex)
@@ -491,12 +529,13 @@ namespace Projeto_Analise_Dados
 
                     }
                     connection.Close();
-
+                    
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex.Message);
                 }
+                Listcustomers.Clear();
             }
         }
         public static void WritePurchaseOrders()
@@ -534,6 +573,7 @@ namespace Projeto_Analise_Dados
                 {
                     Console.WriteLine(ex.Message);
                 }
+                ListPurchaseOrders.Clear();
             }
         }
         public static void WritePurchaseOrdersDetails()
@@ -572,6 +612,7 @@ namespace Projeto_Analise_Dados
                 {
                     Console.WriteLine(ex.Message);
                 }
+                ListPurchaseOrderDetails.Clear();
             }
         }
         public static void WriteOrdersDetails()
@@ -610,6 +651,7 @@ namespace Projeto_Analise_Dados
                 {
                     Console.WriteLine(ex.Message);
                 }
+                ListOrderDetails.Clear();
             }
         }
         public static void WriteEmployees()
@@ -653,6 +695,7 @@ namespace Projeto_Analise_Dados
                 {
                     Console.WriteLine(ex.Message);
                 }
+                ListEmployees.Clear();
             }
         }
         public static void WriteFaturas()
@@ -690,6 +733,7 @@ namespace Projeto_Analise_Dados
                 {
                     Console.WriteLine(ex.Message);
                 }
+                ListFatura.Clear();
             }
         }
         public static void WriteFornecedores()
@@ -732,6 +776,7 @@ namespace Projeto_Analise_Dados
                 {
                     Console.WriteLine(ex.Message);
                 }
+                ListSuppliers.Clear();
             }
         }
         public static void WriteOrders()
@@ -782,6 +827,7 @@ namespace Projeto_Analise_Dados
                 {
                     Console.WriteLine(ex.Message);
                 }
+                ListOrders.Clear();
             }
         }
         public static void WriteProducts()
@@ -825,6 +871,7 @@ namespace Projeto_Analise_Dados
                 {
                     Console.WriteLine(ex.Message);
                 }
+                ListProducts.Clear();
             }
         }
         public static void WriteRemetente()
@@ -860,12 +907,13 @@ namespace Projeto_Analise_Dados
 
                     }
                     connection.Close();
-
+                    
                 }
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex.Message);
                 }
+                ListShippers.Clear();
             }
         }
 
